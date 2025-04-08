@@ -1,3 +1,5 @@
+// Main shell loop
+
 #include "shell.h"
 
 int main() {
