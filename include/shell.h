@@ -11,10 +11,22 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <limits.h>  // For PATH_MAX
-#include <termios.h>
+#include <time.h>    // For timestamps in SDR logs
+#include <math.h>    // For log10f function
+#include <rtl-sdr.h>  // RTL-SDR library
+#include <fftw3.h>    // For FFT processing
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
+
+// SDR Constants
+#define DEFAULT_SAMPLE_RATE 2048000
+#define DEFAULT_BUFFER_SIZE 16384
+#define DEFAULT_FREQ 100000000  // 100 MHz
+#define DATA_DIR "./data"
+#define SPECTRUM_DIR "./data/spectrum_logs"
+#define IQ_DIR "./data/iq_samples"
+#define SNR_DIR "./data/snr_logs"
 
 // New command structure
 typedef int (*command_function)(char**);
@@ -41,7 +53,19 @@ char* myshell_generator(const char* text, int state);
 int cmd_cd(char **args);
 int cmd_exit(char **args);
 int cmd_help(char **args);
-// Add declarations for your custom commands here
 int cmd_hello(char **args);
+
+// SDR command functions
+int cmd_sdr_scan(char **args);
+int cmd_sdr_monitor(char **args);
+int cmd_sdr_record(char **args);
+int cmd_sdr_info(char **args);
+int cmd_sdr_snr(char **args);
+
+// SDR utility functions
+int create_data_directories();
+char* get_timestamp_string();
+int open_sdr_device(rtlsdr_dev_t **dev);
+void close_sdr_device(rtlsdr_dev_t *dev);
 
 #endif //SHELL_H

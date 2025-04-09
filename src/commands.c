@@ -31,11 +31,20 @@ int cmd_help(char **args) {
     return 1;
 }
 
-// Define the commands array
+// Define the commands array with added SDR commands
 shell_command commands[] = {
+    // Original commands
     {"cd", cmd_cd, "Change directory"},
     {"exit", cmd_exit, "Exit the shell"},
     {"hello", cmd_hello, "Print a greeting"},
     {"help", cmd_help, "Display this help information"},
+
+    // New SDR commands
+    {"sdr_info", cmd_sdr_info, "Display RTL-SDR device information"},
+    {"sdr_scan", cmd_sdr_scan, "Scan frequency range - usage: sdr_scan [start_freq] [end_freq] [step] [samples]"},
+    {"sdr_monitor", cmd_sdr_monitor, "Monitor signal level at frequency - usage: sdr_monitor [frequency]"},
+    {"sdr_record", cmd_sdr_record, "Record IQ data samples - usage: sdr_record [frequency] [duration]"},
+    {"sdr_snr", cmd_sdr_snr, "Measure signal-to-noise ratio - usage: sdr_snr [frequency] [duration]"},
+
     {NULL, NULL, NULL}
 };
