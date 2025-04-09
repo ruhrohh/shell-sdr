@@ -9,6 +9,7 @@ char *builtin_commands[] = {
 
 // Generate completion matches
 // Update your generator function to handle both commands and filenames
+// Update your generator function to use the new commands structure
 char* myshell_generator(const char* text, int state) {
     static int list_index, len;
     static int is_command_completion;
@@ -21,7 +22,7 @@ char* myshell_generator(const char* text, int state) {
         list_index = 0;
         len = strlen(text);
         is_command_completion = (rl_line_buffer[0] == '\0' ||
-                                 strchr(rl_line_buffer, ' ') == NULL);
+                               strchr(rl_line_buffer, ' ') == NULL);
 
         // If we're completing a command (first word)
         if (is_command_completion) {
@@ -55,8 +56,8 @@ char* myshell_generator(const char* text, int state) {
 
     // Check built-in commands first
     if (is_command_completion) {
-        while (builtin_commands[list_index] != NULL) {
-            char *name = builtin_commands[list_index++];
+        while (commands[list_index].name != NULL) {
+            char *name = commands[list_index++].name;
             if (strncmp(name, text, len) == 0) {
                 return strdup(name);
             }
@@ -71,6 +72,7 @@ char* myshell_generator(const char* text, int state) {
         // Fall through to filename completion
     }
 
+    // Rest of the function remains the same...
     // Return the next match from files
     while ((entry = readdir(dir)) != NULL) {
         // Skip . and .. if at the start of completion

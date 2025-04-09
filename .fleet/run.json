@@ -8,6 +8,7 @@
                 "$PROJECT_DIR$/src/shell.c",
                 "$PROJECT_DIR$/src/core.c",
                 "$PROJECT_DIR$/src/utils.c",
+                "$PROJECT_DIR$/src/commands.c",
                 "-o",
                 "$PROJECT_DIR$/myshell",
                 "-lreadline",

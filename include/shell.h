@@ -15,6 +15,18 @@
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 
+// New command structure
+typedef int (*command_function)(char**);
+
+typedef struct {
+    char *name;
+    command_function func;
+    char *help;
+} shell_command;
+
+// Declare the commands array as extern
+extern shell_command commands[];
+
 // Function declarations
 void print_prompt();
 char* read_command();
@@ -23,5 +35,12 @@ int execute_command(char** args);
 void free_args(char** args);
 char** myshell_completion(const char* text, int start, int end);
 char* myshell_generator(const char* text, int state);
+
+// Built-in command functions
+int cmd_cd(char **args);
+int cmd_exit(char **args);
+int cmd_help(char **args);
+// Add declarations for your custom commands here
+int cmd_hello(char **args);
 
 #endif //SHELL_H
