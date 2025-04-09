@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "Build Shell",
+            "program": "/usr/bin/gcc",
+            "args": [
+                "$PROJECT_DIR$/src/shell.c",
+                "$PROJECT_DIR$/src/core.c",
+                "$PROJECT_DIR$/src/utils.c",
+                "-o",
+                "$PROJECT_DIR$/shell",
+                "-lreadline",
+                "-Wall"
+            ]
+        },
+        {
+            "type": "command",
+            "name": "Run Shell",
+            "dependsOn": ["Build Shell"],
+            "program": "$PROJECT_DIR$/shell"
+        }
+    ]
+}
