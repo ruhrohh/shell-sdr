@@ -35,7 +35,7 @@ char** parse_command(char* command) {
     int position = 0;
     int i = 0;
     int in_quotes = 0;
-    char current_arg[MAX_COMMAND_LENGTH];
+    char current_arg[MAX_COMMAND_LENGTH] = {0};
     int arg_pos = 0;
 
     while (command[i] != '\0' && position < MAX_ARGS) {

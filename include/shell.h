@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <limits.h>  // For PATH_MAX
+#include <termios.h>
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
