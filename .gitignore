@@ -1,0 +1,26 @@
+# Compiled binary
+/myshell
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# History files
+*.myshell_history
+.myshell_history
+
+# Fleet configuration
+.fleet/
+
+# Dependency files
+*.d
+
+# Editor backup files
+*~
+*.swp
+
+# Build directories
+/build/
+/bin/
