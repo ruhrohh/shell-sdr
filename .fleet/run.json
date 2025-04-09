@@ -3,22 +3,23 @@
         {
             "type": "command",
             "name": "Build Shell",
-            "program": "/usr/bin/gcc",
+            "program": "gcc",
             "args": [
                 "$PROJECT_DIR$/src/shell.c",
                 "$PROJECT_DIR$/src/core.c",
                 "$PROJECT_DIR$/src/utils.c",
                 "-o",
-                "$PROJECT_DIR$/shell",
+                "$PROJECT_DIR$/myshell",
                 "-lreadline",
-                "-Wall"
+                "-I",
+                "$PROJECT_DIR$/include"
             ]
         },
         {
             "type": "command",
             "name": "Run Shell",
             "dependsOn": ["Build Shell"],
-            "program": "$PROJECT_DIR$/shell"
+            "program": "$PROJECT_DIR$/myshell"
         }
     ]
 }
