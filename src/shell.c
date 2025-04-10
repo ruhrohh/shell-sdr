@@ -24,6 +24,9 @@ int main() {
     aliases[alias_count].name = strdup("ls");
     aliases[alias_count].value = strdup("ls --color=auto");
     alias_count++;
+    aliases[alias_count].name = strdup("congq");
+    aliases[alias_count].value = strdup("nc localhost 7356");
+    alias_count++;
 
     // Initialize and load config file
     initialize_config_file();
