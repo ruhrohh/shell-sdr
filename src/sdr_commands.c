@@ -242,10 +242,6 @@ int cmd_sdr_scan(char **args) {
 
     printf("\nScan complete. Results saved to %s\n", filename);
 
-    // Auto-upload to Discord
-    printf("Uploading to Discord...\n");
-    system("python3 discord_uploader.py spectrum");
-
     free(buffer);
     fclose(file);
     close_sdr_device(dev);
@@ -357,10 +353,6 @@ int cmd_sdr_record(char **args) {
         fprintf(info_file, "Sample Format: 8-bit unsigned IQ\n");
         fclose(info_file);
     }
-
-    // Auto-upload to Discord
-    printf("Uploading to Discord...\n");
-    system("python3 discord_uploader.py iq");
 
     free(buffer);
     fclose(file);
@@ -513,10 +505,6 @@ int cmd_sdr_snr(char **args) {
     }
 
     printf("\nSNR measurement complete. Results saved to %s\n", filename);
-
-    // Auto-upload to Discord
-    printf("Uploading to Discord...\n");
-    system("python3 discord_uploader.py snr");
 
     // Clean up
     fftwf_destroy_plan(fft_plan);

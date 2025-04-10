@@ -31,34 +31,6 @@ int cmd_help(char **args) {
     return 1;
 }
 
-int cmd_upload_discord(char **args) {
-    char command[512];
-
-    // Create data directories if they don't exist
-    if (!create_data_directories()) {
-        return 1;
-    }
-
-    if (args[1] && strcmp(args[1], "spectrum") == 0) {
-        // Only upload spectrum files
-        printf("Uploading spectrum files to Discord...\n");
-        system("python3 discord_uploader.py spectrum");
-    } else if (args[1] && strcmp(args[1], "iq") == 0) {
-        // Only upload IQ files
-        printf("Uploading IQ files to Discord...\n");
-        system("python3 discord_uploader.py iq");
-    } else if (args[1] && strcmp(args[1], "snr") == 0) {
-        // Only upload SNR files
-        printf("Uploading SNR files to Discord...\n");
-        system("python3 discord_uploader.py snr");
-    } else {
-        // Upload all file types
-        printf("Uploading all SDR files to Discord...\n");
-        system("python3 discord_uploader.py all");
-    }
-
-    return 1;
-}
 
 int cmd_alias(char **args) {
     // No arguments - list all aliases
@@ -193,7 +165,6 @@ shell_command commands[] = {
     {"exit", cmd_exit, "Exit the shell"},
     {"hello", cmd_hello, "Print a greeting"},
     {"help", cmd_help, "Display this help information"},
-    {"upload_discord", cmd_upload_discord, "Upload SDR files to Discord - usage: upload_discord [file_type]"},
     {"alias", cmd_alias, "Define or display aliases"},
     {"unalias", cmd_unalias, "Remove an alias"},
 
