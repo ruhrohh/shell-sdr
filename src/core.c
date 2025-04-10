@@ -13,7 +13,7 @@ char* read_command() {
 
     char prompt[1100];
     // Format with color: username@cwd $
-    sprintf(prompt, "\033[32m%s\033[35m@\033[34m%s \033[32m$ \033[30m", username, cwd);
+    sprintf(prompt, "\033[32m%s\033[35m@\033[34m%s \033[32m$ \033[0m", username, cwd);
 
     char* command = readline(prompt);
 
