@@ -25,6 +25,10 @@ int main() {
     aliases[alias_count].value = strdup("ls --color=auto");
     alias_count++;
 
+    // Initialize and load config file
+    initialize_config_file();
+    load_aliases_from_config();
+
     printf("Welcome to MyShell! Type 'exit' to quit.\n");
 
     while(status) {
@@ -39,6 +43,9 @@ int main() {
 
     // Save history on exit
     write_history(".myshell_history");
+
+    // Save aliases to config file
+    save_aliases_to_config();
 
     // Free aliases
     for (int i = 0; i < alias_count; i++) {

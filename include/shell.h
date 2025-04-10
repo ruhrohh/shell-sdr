@@ -81,4 +81,11 @@ void close_sdr_device(rtlsdr_dev_t *dev);
 int display_terminal_spectrum(uint32_t* freqs, double* powers, int n_points, uint32_t current_freq);
 double find_max_power(double* powers, int n_points);
 
+// Configuration functions
+char* get_config_file_path();
+int initialize_config_file();
+int load_aliases_from_config();
+int save_aliases_to_config();
+int alias_exists(const char* name);
+
 #endif //SHELL_H

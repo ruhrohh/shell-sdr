@@ -77,15 +77,30 @@ int cmd_alias(char **args) {
                 // Update existing alias
                 free(aliases[i].value);
                 aliases[i].value = strdup(value);
+                save_aliases_to_config(); // Save changes to config
                 return 1;
             }
         }
 
         // Add new alias
         if (alias_count < MAX_ALIASES) {
-            aliases[alias_count].name = strdup(name);
-            aliases[alias_count].value = strdup(value);
-            alias_count++;
+            // Check if this alias already exists
+            if (!alias_exists(name)) {
+                aliases[alias_count].name = strdup(name);
+                aliases[alias_count].value = strdup(value);
+                alias_count++;
+                save_aliases_to_config(); // Save changes to config
+            } else {
+                // Update existing alias
+                for (int i = 0; i < alias_count; i++) {
+                    if (strcmp(aliases[i].name, name) == 0) {
+                        free(aliases[i].value);
+                        aliases[i].value = strdup(value);
+                        save_aliases_to_config(); // Save changes to config
+                        break;
+                    }
+                }
+            }
         } else {
             fprintf(stderr, "Maximum number of aliases reached\n");
         }
@@ -109,15 +124,30 @@ int cmd_alias(char **args) {
                 // Update existing alias
                 free(aliases[i].value);
                 aliases[i].value = strdup(value);
+                save_aliases_to_config(); // Save changes to config
                 return 1;
             }
         }
 
         // Add new alias
         if (alias_count < MAX_ALIASES) {
-            aliases[alias_count].name = strdup(name);
-            aliases[alias_count].value = strdup(value);
-            alias_count++;
+            // Check if this alias already exists
+            if (!alias_exists(name)) {
+                aliases[alias_count].name = strdup(name);
+                aliases[alias_count].value = strdup(value);
+                alias_count++;
+                save_aliases_to_config(); // Save changes to config
+            } else {
+                // Update existing alias (handled above but checking again for safety)
+                for (int i = 0; i < alias_count; i++) {
+                    if (strcmp(aliases[i].name, name) == 0) {
+                        free(aliases[i].value);
+                        aliases[i].value = strdup(value);
+                        save_aliases_to_config(); // Save changes to config
+                        break;
+                    }
+                }
+            }
         } else {
             fprintf(stderr, "Maximum number of aliases reached\n");
         }
@@ -150,6 +180,7 @@ int cmd_unalias(char **args) {
 
             alias_count--;
             printf("Alias '%s' removed\n", args[1]);
+            save_aliases_to_config(); // Save changes to config
             return 1;
         }
     }
@@ -170,7 +201,7 @@ shell_command commands[] = {
 
     // New SDR commands
     {"sdr_info", cmd_sdr_info, "Display RTL-SDR device information"},
-    {"sdr_scan", cmd_sdr_scan, "Scan frequency range - usage: sdr_scan [start_freq] [end_freq] [step] [samples] [--viz]"},
+    {"sdr_scan", cmd_sdr_scan, "Scan frequency range - usage: sdr_scan [start_freq] [end_freq] [step] [samples]"},
     {"sdr_monitor", cmd_sdr_monitor, "Monitor signal level at frequency - usage: sdr_monitor [frequency]"},
     {"sdr_record", cmd_sdr_record, "Record IQ data samples - usage: sdr_record [frequency] [duration]"},
     {"sdr_snr", cmd_sdr_snr, "Measure signal-to-noise ratio - usage: sdr_snr [frequency] [duration]"},
