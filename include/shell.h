@@ -78,5 +78,7 @@ int create_data_directories();
 char* get_timestamp_string();
 int open_sdr_device(rtlsdr_dev_t **dev);
 void close_sdr_device(rtlsdr_dev_t *dev);
+int display_terminal_spectrum(uint32_t* freqs, double* powers, int n_points, uint32_t current_freq);
+double find_max_power(double* powers, int n_points);
 
 #endif //SHELL_H

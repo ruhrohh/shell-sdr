@@ -154,6 +154,7 @@ int cmd_sdr_info(char **args) {
 }
 
 // Command to scan frequency range and log spectrum data
+// Modified cmd_sdr_scan function
 int cmd_sdr_scan(char **args) {
     if (!create_data_directories()) {
         return 1;
@@ -164,15 +165,41 @@ int cmd_sdr_scan(char **args) {
     uint32_t step = 100000; // 100 kHz steps
     int samples = 10; // Number of samples per frequency
 
+    // Add visualization flag
+    int terminal_viz = 0;
+
     // Parse command arguments
     if (args[1]) start_freq = atoi(args[1]);
     if (args[2]) end_freq = atoi(args[2]);
     if (args[3]) step = atoi(args[3]);
     if (args[4]) samples = atoi(args[4]);
+    if (args[5] && strcmp(args[5], "--viz") == 0) {
+        terminal_viz = 1;
+    }
+
+    // Prepare arrays for visualization
+    int n_points = (end_freq - start_freq) / step + 1;
+    uint32_t *freq_array = NULL;
+    double *power_array = NULL;
+
+    if (terminal_viz) {
+        freq_array = malloc(sizeof(uint32_t) * n_points);
+        power_array = malloc(sizeof(double) * n_points);
+        if (!freq_array || !power_array) {
+            perror("Failed to allocate memory for visualization");
+            if (freq_array) free(freq_array);
+            if (power_array) free(power_array);
+            terminal_viz = 0;
+        }
+    }
 
     // Open device
     rtlsdr_dev_t *dev;
     if (!open_sdr_device(&dev)) {
+        if (terminal_viz) {
+            free(freq_array);
+            free(power_array);
+        }
         return 1;
     }
 
@@ -185,6 +212,10 @@ int cmd_sdr_scan(char **args) {
     FILE *file = fopen(filename, "w");
     if (!file) {
         perror("Failed to open output file");
+        if (terminal_viz) {
+            free(freq_array);
+            free(power_array);
+        }
         close_sdr_device(dev);
         return 1;
     }
@@ -192,23 +223,27 @@ int cmd_sdr_scan(char **args) {
     // Write CSV header
     fprintf(file, "Frequency,Power\n");
 
-    printf("Scanning from %.2f MHz to %.2f MHz with %.2f kHz steps...\n",
-           start_freq/1e6, end_freq/1e6, step/1e3);
+    if (!terminal_viz) {
+        printf("Scanning from %.2f MHz to %.2f MHz with %.2f kHz steps...\n",
+               start_freq/1e6, end_freq/1e6, step/1e3);
+    }
 
     // Allocate buffer for samples
     uint8_t *buffer = malloc(DEFAULT_BUFFER_SIZE);
     if (!buffer) {
         perror("Failed to allocate sample buffer");
+        if (terminal_viz) {
+            free(freq_array);
+            free(power_array);
+        }
         fclose(file);
         close_sdr_device(dev);
         return 1;
     }
 
     // Scan frequencies
+    int point_index = 0;
     for (uint32_t freq = start_freq; freq <= end_freq; freq += step) {
-        printf("\rScanning %.2f MHz...", freq/1e6);
-        fflush(stdout);
-
         // Set frequency
         rtlsdr_set_center_freq(dev, freq);
 
@@ -236,11 +271,39 @@ int cmd_sdr_scan(char **args) {
 
         double avg_power = power_sum / samples;
 
+        // Store data for visualization
+        if (terminal_viz && point_index < n_points) {
+            freq_array[point_index] = freq;
+            power_array[point_index] = avg_power;
+            point_index++;
+
+            // Update visualization every few steps
+            if (point_index % 5 == 0 || freq >= end_freq) {
+                display_terminal_spectrum(freq_array, power_array, point_index, freq);
+            }
+        } else {
+            // Original progress output
+            printf("\rScanning %.2f MHz...", freq/1e6);
+            fflush(stdout);
+        }
+
         // Write to CSV
         fprintf(file, "%u,%.6f\n", freq, avg_power);
     }
 
-    printf("\nScan complete. Results saved to %s\n", filename);
+    // Cleanup
+    if (terminal_viz) {
+        // Show final visualization
+        display_terminal_spectrum(freq_array, power_array, point_index, end_freq);
+
+        // Clean up visualization arrays
+        free(freq_array);
+        free(power_array);
+
+        printf("\nScan complete. Results saved to %s\n", filename);
+    } else {
+        printf("\nScan complete. Results saved to %s\n", filename);
+    }
 
     free(buffer);
     fclose(file);
@@ -589,4 +652,80 @@ int cmd_sdr_monitor(char **args) {
     close_sdr_device(dev);
 
     return 1;
+}
+
+// Add these functions to sdr_commands.c
+
+// Function to display spectrum in terminal
+int display_terminal_spectrum(uint32_t* freqs, double* powers, int n_points, uint32_t current_freq) {
+    int viz_width = 80;
+    int viz_height = 20;
+    char spectrum_viz[20][81]; // +1 for null terminator
+
+    // Find max power for scaling
+    double max_power = find_max_power(powers, n_points);
+    if (max_power <= 0) max_power = 1.0; // Avoid division by zero
+
+    // Initialize visualization grid
+    for (int y = 0; y < viz_height; y++) {
+        for (int x = 0; x < viz_width; x++) {
+            spectrum_viz[y][x] = ' ';
+        }
+        spectrum_viz[y][viz_width] = '\0';
+    }
+
+    // Plot spectrum data
+    for (int i = 0; i < n_points; i++) {
+        int x = (int)(((double)i / n_points) * viz_width);
+        if (x >= viz_width) x = viz_width - 1;
+
+        // Convert power to dB for better visualization
+        double power_db = 10 * log10(powers[i] + 1e-10); // Avoid log(0)
+        double min_db = -30; // Adjust based on your typical noise floor
+        double normalized_power = (power_db - min_db) / (-min_db);
+        if (normalized_power < 0) normalized_power = 0;
+        if (normalized_power > 1) normalized_power = 1;
+
+        int y = viz_height - (int)(normalized_power * viz_height) - 1;
+        if (y < 0) y = 0;
+
+        // Draw the bar
+        for (int j = viz_height - 1; j >= y; j--) {
+            spectrum_viz[j][x] = '#';
+        }
+    }
+
+    // Clear screen and position cursor at top
+    printf("\033[2J\033[H");
+
+    // Draw frequency scale
+    printf("Frequency (MHz): %.1f", freqs[0]/1e6);
+    for (int i = 1; i < 8; i++) {
+        int idx = (i * n_points) / 8;
+        if (idx < n_points) {
+            int pos = (int)(((double)idx / n_points) * (viz_width - 12));
+            printf("%*s%.1f", pos, "", freqs[idx]/1e6);
+        }
+    }
+    printf("\n");
+
+    // Draw visualization
+    for (int y = 0; y < viz_height; y++) {
+        printf("%s\n", spectrum_viz[y]);
+    }
+
+    // Draw status line
+    printf("Scanning: Currently at %.2f MHz | Progress: %.1f%%\n",
+           current_freq/1e6, ((current_freq - freqs[0]) / (double)(freqs[n_points-1] - freqs[0])) * 100);
+
+    return 0;
+}
+
+// Helper function to find maximum power
+double find_max_power(double* powers, int n_points) {
+    double max = 0;
+    for (int i = 0; i < n_points; i++) {
+        if (powers[i] > max) max = powers[i];
+    }
+    return max;
 }
