@@ -13,8 +13,9 @@ char* read_command() {
 
     char prompt[1100];
     // Format with color: username@cwd $
-    sprintf(prompt, "\033[32m%s\033[35m@\033[34m%s \033[32m$ \033[0m", username, cwd);
-
+// Format with color for Raspberry Pi: username@cwd $
+    sprintf(prompt, "\001\033[1;32m\002%s\001\033[1;37m\002@\001\033[1;36m\002%s \001\033[1;33m\002$ \001\033[0m\002",
+            username, cwd);
     char* command = readline(prompt);
 
     // If EOF, handle it
