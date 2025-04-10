@@ -5,8 +5,15 @@ char* read_command() {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
 
+    // Get the username
+    char* username = getenv("USER");
+    if (!username) {
+        username = "user"; // Fallback if USER environment variable is not set
+    }
+
     char prompt[1100];
-    sprintf(prompt, "%s $ ", cwd);
+    // Format with color: username@cwd $
+    sprintf(prompt, "\033[32m%s\033[35m@\033[34m%s \033[32m$ \033[30m", username, cwd);
 
     char* command = readline(prompt);
 
@@ -111,6 +118,40 @@ int execute_command(char** args) {
     if (args[0] == NULL) {
         // Empty command
         return 1;
+    }
+
+    // Check for aliases
+    for (int i = 0; i < alias_count; i++) {
+        if (strcmp(args[0], aliases[i].name) == 0) {
+            // Parse the alias value into arguments
+            char* alias_cmd = strdup(aliases[i].value);
+            char** alias_args = parse_command(alias_cmd);
+
+            // Skip built-in checking and go straight to execution
+            pid_t pid = fork();
+
+            if (pid == 0) {
+                // Child process
+                if (execvp(alias_args[0], alias_args) == -1) {
+                    perror("command execution failed");
+                    exit(EXIT_FAILURE);
+                }
+            } else if (pid < 0) {
+                // Error forking
+                perror("fork failed");
+            } else {
+                // Parent process
+                int status;
+                do {
+                    waitpid(pid, &status, WUNTRACED);
+                } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+            }
+
+            // Clean up
+            free(alias_cmd);
+            free_args(alias_args);
+            return 1;
+        }
     }
 
     // Search for built-in command

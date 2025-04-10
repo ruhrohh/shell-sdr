@@ -37,6 +37,15 @@ typedef struct {
     char *help;
 } shell_command;
 
+typedef struct {
+    char *name;
+    char *value;
+} alias_t;
+
+#define MAX_ALIASES 100
+extern alias_t aliases[MAX_ALIASES];
+extern int alias_count;
+
 // Declare the commands array as extern
 extern shell_command commands[];
 
@@ -54,6 +63,8 @@ int cmd_cd(char **args);
 int cmd_exit(char **args);
 int cmd_help(char **args);
 int cmd_hello(char **args);
+int cmd_alias(char **args);
+int cmd_unalias(char **args);
 
 // SDR command functions
 int cmd_sdr_scan(char **args);

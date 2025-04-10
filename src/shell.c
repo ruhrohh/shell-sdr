@@ -2,6 +2,10 @@
 
 #include "shell.h"
 
+// After includes, before main()
+alias_t aliases[MAX_ALIASES];
+int alias_count = 0;
+
 int main() {
     char* command;
     char** args;
@@ -15,6 +19,11 @@ int main() {
     // Initialize history
     using_history();
     read_history(".myshell_history");
+
+    // Initialize default aliases
+    aliases[alias_count].name = strdup("ls");
+    aliases[alias_count].value = strdup("ls --color=auto");
+    alias_count++;
 
     printf("Welcome to MyShell! Type 'exit' to quit.\n");
 
@@ -30,6 +39,12 @@ int main() {
 
     // Save history on exit
     write_history(".myshell_history");
+
+    // Free aliases
+    for (int i = 0; i < alias_count; i++) {
+        free(aliases[i].name);
+        free(aliases[i].value);
+    }
 
     printf("Goodbye!\n");
     return 0;
