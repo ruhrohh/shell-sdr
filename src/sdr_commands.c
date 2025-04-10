@@ -276,8 +276,21 @@ int cmd_sdr_record(char **args) {
     rtlsdr_set_center_freq(dev, freq);
 
     // Create output file
+//    char* timestamp = get_timestamp_string();
+//    char filename[PATH_MAX];
+//    sprintf(filename, "%s/iq_%s.dat", IQ_DIR, timestamp);
+    // After generating the timestamp
     char* timestamp = get_timestamp_string();
     char filename[PATH_MAX];
+
+    // Sanitize the timestamp to ensure it only contains safe characters
+    for (int i = 0; timestamp[i] != '\0'; i++) {
+        // Replace any non-alphanumeric characters with underscores
+        if (!isalnum(timestamp[i]) && timestamp[i] != '-' && timestamp[i] != '_') {
+            timestamp[i] = '_';
+        }
+    }
+
     sprintf(filename, "%s/iq_%s.dat", IQ_DIR, timestamp);
     free(timestamp);
 
