@@ -1,6 +1,8 @@
-# Compiled binary
+# Compiled binaries
 /myshell
 /shell
+*.exe
+*.out
 
 # Object files
 *.o
@@ -8,20 +10,50 @@
 *.obj
 *.elf
 
-# History files
-*.myshell_history
-.myshell_history
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
 
-# Fleet configuration
-.fleet/
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
 
-# Dependency files
+# Dependencies
 *.d
 
-# Editor backup files
-*~
-*.swp
+# Python related
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+uploaded_files.json
+
+# SDR output data
+/data/
+/data/spectrum_logs/
+/data/iq_samples/
+/data/snr_logs/
 
 # Build directories
 /build/
 /bin/
+/obj/
+
+# History files
+.myshell_history
+*.myshell_history
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*~
+.*.sw[a-p]
+
+# OS specific
+.DS_Store
+Thumbs.db
