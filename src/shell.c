@@ -1,3 +1,12 @@
+/**
+ * @file shell.c
+ * @brief Main shell entry point
+ *
+ * Contains the main() function and shell loop. Initializes the shell,
+ * configures readline, sets up history and aliases, and manages the
+ * main command execution loop. Handles cleanup on exit.
+ */
+
 // Main shell loop
 
 #include "shell.h"

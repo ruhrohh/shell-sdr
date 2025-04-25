@@ -1,3 +1,12 @@
+/**
+ * @file sdr_record.c
+ * @brief IQ data recording functionality
+ *
+ * Implements the sdr_record command which captures raw IQ samples
+ * from the SDR device at a specified frequency. Saves data to binary
+ * files along with metadata about the recording parameters.
+ */
+
 #include "shell.h"
 
 // Command to record IQ data samples

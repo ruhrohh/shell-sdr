@@ -1,3 +1,8 @@
+# MyShell Project Makefile
+# Builds the myshell executable with all components
+# Handles compilation of both core shell functions and SDR modules
+# Provides targets: all, clean, run
+
 # Compiler and flags
 CC = gcc
 CFLAGS = -I./include

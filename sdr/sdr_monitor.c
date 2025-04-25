@@ -1,3 +1,12 @@
+/**
+ * @file sdr_monitor.c
+ * @brief Real-time signal monitoring
+ *
+ * Implements the sdr_monitor command which continuously measures and
+ * displays the signal power at a specific frequency. Provides a
+ * real-time terminal-based power meter visualization.
+ */
+
 #include "shell.h"
 
 // Command to monitor a frequency (simplified version)

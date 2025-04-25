@@ -1,3 +1,15 @@
+/**
+ * @file sdr_utils.c
+ * @brief Utility functions for SDR functionality
+ *
+ * Provides common utility functions for the SDR components, including:
+ * - Directory creation for data storage
+ * - Timestamp generation for filenames
+ * - Device opening/closing helpers
+ * - Terminal-based spectrum visualization
+ * - Signal power calculation
+ */
+
 #include "shell.h"
 
 // Callback function for async reads

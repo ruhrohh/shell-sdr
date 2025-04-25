@@ -1,3 +1,12 @@
+/**
+ * @file sdr_snr.c
+ * @brief Signal-to-Noise Ratio measurement functionality
+ *
+ * Implements the sdr_snr command which measures and logs the signal-to-noise
+ * ratio at a specific frequency. Performs FFT analysis to separate signal
+ * from noise and calculates SNR in dB. Results are saved to CSV files.
+ */
+
 #include "shell.h"
 
 // Command to monitor a specific frequency and measure SNR

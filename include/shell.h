@@ -1,3 +1,12 @@
+/**
+ * @file shell.h
+ * @brief Main header file for the shell
+ *
+ * Defines constants, structures, and function prototypes for the entire
+ * shell application. Includes declarations for both core shell functionality
+ * and SDR components. This file is included by all source files.
+ */
+
 #ifndef SHELL_H
 #define SHELL_H
 

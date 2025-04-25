@@ -1,3 +1,12 @@
+/**
+ * @file commands.c
+ * @brief Implementation of built-in shell commands
+ *
+ * This file contains the implementations of all built-in shell commands,
+ * including cd, exit, help, hello, alias, and unalias.
+ * It also defines the commands array that lists all available commands.
+ */
+
 #include "shell.h"
 
 // Built-in command implementations

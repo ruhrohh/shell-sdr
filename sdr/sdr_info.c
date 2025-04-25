@@ -1,3 +1,12 @@
+/**
+ * @file sdr_info.c
+ * @brief RTL-SDR device information
+ *
+ * Implements the sdr_info command which displays detailed information
+ * about connected RTL-SDR devices, including vendor, product, serial,
+ * sample rate, frequency, and available gain values.
+ */
+
 #include "shell.h"
 
 // Command to display RTL-SDR device information

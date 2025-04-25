@@ -1,3 +1,15 @@
+/**
+ * @file core.c
+ * @brief Core shell functionality
+ *
+ * Implements the main functions of the shell including:
+ * - Reading commands with custom prompt
+ * - Parsing commands into arguments
+ * - Executing commands with fork/exec
+ * - Environment variable expansion
+ * - Alias substitution
+ */
+
 #include "shell.h"
 
 // Read the command from stdin

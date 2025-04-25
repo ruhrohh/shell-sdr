@@ -1,3 +1,7 @@
+# MyShell Project .gitignore
+# Specifies files and directories to be ignored by git
+# Includes compiled binaries, object files, libraries, editor files, and logs
+
 # Compiled binaries
 /myshell
 /shell

@@ -1,3 +1,12 @@
+/**
+ * @file config.c
+ * @brief Configuration file handling
+ *
+ * Manages the shell's configuration file (.myshell_config) in the user's
+ * home directory. Handles loading and saving aliases, creating default
+ * configurations.
+ */
+
 #include "shell.h"
 
 // Configuration file path (in user's home directory)

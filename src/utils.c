@@ -1,3 +1,11 @@
+/**
+ * @file utils.c
+ * @brief Utility functions for tab completion and command suggestions
+ *
+ * This file implements the tab completion functionality for the shell,
+ * including completion for both built-in commands and filenames.
+ */
+
 #include "shell.h"
 
 // Add this function to get built-in commands

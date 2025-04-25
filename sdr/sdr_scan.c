@@ -1,3 +1,12 @@
+/**
+ * @file sdr_scan.c
+ * @brief Frequency scanning functionality
+ *
+ * Implements the sdr_scan command which performs a frequency sweep
+ * over a specified range and measures signal power. Can display results
+ * as a real-time terminal visualization and saves data to CSV files.
+ */
+
 #include "shell.h"
 
 // Command to scan frequency range and log spectrum data
